@@ -1,0 +1,56 @@
+/**
+* create a string {{tag}}[{{attr}}="{{attrVal}}"]/
+*/
+var makeAttrVal= function(tag,attr,altTail){
+	var start= [tag,'[',attr,'="']
+	if(altTail)
+		start.altTail= altTail
+	return function(attrVal){
+		var tagAttrValTemplate= [this.toString(),attrVal,'"]',this.altTail===undefined?'/':this.altTail]
+		return tagAttrValTemplate.join("")
+	}
+}.bind(start.join(""))
+
+["a","abbr","address","div","img","span"].forEach(function(tag){
+	this[tag]= makeAttrVal(tag,"class")
+})
+
+// monkey patch a with a guarded special case
+var _aRel= makeAttrVal("a","rel"),
+  _aRelNoF= makeAttrVal("a","rel"),
+  _aClass= a
+function a(classVal,relVal){
+	if(rel === undefined)
+		return _aClass(classVal)
+	else if(classVal === undefined)
+		return _aRel(relVal)+
+	return _aRelNoF(relVal)+'[class="'+classVal+'"]/'
+}
+
+var b= '/html/body/div[class="hfeed"]/', // TUTORIAL: div("hfeed")
+  ha= b+div("hentry activity"),
+  ap= ha+span("actor-photo")+address("author vcard")
+
+// SAX test case:
+var taken= {
+	author: av+"span/"+a("url")+span("fn")",
+	author_img: ap+"a/"+img("photo")+"@src",
+	author_feed: ap+"span/"+a("url")+"@href",
+	author_uid: ap+span("uid"),
+	t_published: ha+abbr("published")+"@title",
+	t_updated: ha+abbr("updated")+"@title",
+	service: ha+span("service"),
+	visibility: ha+span("visibility"),
+	title: ha+div("entry-title"),
+	content_cur: ha+div("entry-content"),
+	content_orig: ha+div("original-content"),
+	href: ha+div("permalink")+a(undefined,"bookmark")+"/@href",
+	attachment_type: ha+attachment+span("object-type"),
+	attachment_title: ha+span("attachment")+"a/",
+	attachment_url: ha+span("attachment")+"a/@url",
+	container_content: ha+span("twoPaneContainer")+span("twoPaneContent"),
+	container_label: ha+span("twoPaneContainer")+span("twoPaneLabel"),
+	plusones: ha+span("plusoned")
+	// "plusones.name" = ha+span("plusoned")+a("vcard url")
+	// "plusones.href" = ha+span("plusoned")+a("vcard url")+"/@href"
+}
